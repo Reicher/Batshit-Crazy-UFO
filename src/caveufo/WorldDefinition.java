@@ -15,10 +15,14 @@ import org.jbox2d.dynamics.World;
  * @author regen
  */
 public class WorldDefinition {
-    WorldDefinition(Dimension screenResolution, Vec2 gravity){
-        m_physicWorld = new World(gravity);
+    WorldDefinition(Dimension screenResolution){
+        m_physicWorld = new World(new Vec2(0,0));
         m_screenRes = screenResolution;
         m_physicalSize = new Vec2(screenResolution.width/20, screenResolution.height/20);
+    }
+    
+    public void SetWorld(World world){
+        m_physicWorld = world;
     }
     
     public World getPhysicsWorld(){

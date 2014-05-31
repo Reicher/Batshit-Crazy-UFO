@@ -6,7 +6,12 @@
 
 package caveufo;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 import java.util.Vector;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
@@ -18,29 +23,23 @@ import org.jbox2d.dynamics.World;
  */
 public class Terrain {
     Terrain(WorldDefinition world){
-        m_staticTerrain = new Vector<GameObject>();
-        ActiveGameObject = new Vector<ActiveGameObject>();
+        m_caveSegment = new ArrayList<CaveSegment>();
         
-        // Create a piece of terrain
-        Vec2 pos = new Vec2(10, 10); 
-        Vec2[] points = new Vec2[]{ new Vec2(-7, -0.5f), new Vec2(-7, 0.5f)
-                , new Vec2(7, 0.5f), new Vec2(7, -0.5f) };
-        GameObject piece = new GameObject(pos, BodyType.STATIC);
-        piece.setPoints(points);
-        piece.createBody(world.getPhysicsWorld());
-        
-        m_staticTerrain.add(piece);
+        // Initial Cave Segments
+        Vec2 upperEdge = new Vec2(0, -3);
+        Vec2 lowerEdge = new Vec2(0, 3);
+        for(int i = 0; i < 40; i++){
+            CaveSegment Next = new CaveSegment(world, upperEdge, lowerEdge);
+            m_caveSegment.add(Next);
+            upperEdge = Next.getUpperEnd();
+            lowerEdge = Next.getLowerEnd();
+        }
     }
     
     public void draw(Graphics2D g, WorldDefinition world){
-        for(GameObject piece : m_staticTerrain)
-            piece.draw(g, world);
-        
-        for(ActiveGameObject piece : ActiveGameObject)
-            piece.draw(g, world);
+        for( CaveSegment cs : m_caveSegment)
+            cs.draw(g, world);
     }
     
-    Vector<GameObject> m_staticTerrain;
-    Vector<ActiveGameObject> ActiveGameObject; // Will be used later...
-    
+    private ArrayList<CaveSegment> m_caveSegment;
 }

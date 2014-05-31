@@ -57,8 +57,6 @@ public class GameObject {
         m_fixture.restitution = 0.5f;
         
         m_body =  world.createBody(m_bodyDef);
-        //m_body.setLinearDamping(8);
-        //m_body.setAngularDamping(8);
         m_body.createFixture(m_fixture);
     }
     
@@ -77,7 +75,7 @@ public class GameObject {
         }
         
         goShape.closePath();
-        g.fill(goShape);  
+        g.draw(goShape);  
     }   
     
     public Vec2 getPosition(){

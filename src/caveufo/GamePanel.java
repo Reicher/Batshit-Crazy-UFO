@@ -4,6 +4,7 @@
  */
 package caveufo;
 
+import caveufo.Player.RotationAction;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -17,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.World;
 
 /**
  *
@@ -28,7 +28,7 @@ public class GamePanel extends JPanel implements KeyListener {
     //private final Dimension m_screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private final Dimension m_screenSize = new Dimension(800, 600);
 
-    private final int FPS = 30;
+    private final int FPS = 60;
     private int updateInterval;
     private Timer gameTimer;
     private boolean m_loaded = false;
@@ -71,13 +71,12 @@ public class GamePanel extends JPanel implements KeyListener {
         addKeyListener(this);
         m_gameState = State.GAME;
         
-        Vec2 gravity = new Vec2(0.0f, 9.82f);
-        m_world = new WorldDefinition(m_screenSize, gravity);
+        m_world = new WorldDefinition(m_screenSize);
         
         m_terrain = new Terrain(m_world);
 
-        Vec2 pos = new Vec2(10, 4); 
-        m_player = new Player(pos, 50.0);
+        Vec2 pos = new Vec2(-4, 0); 
+        m_player = new Player(pos);
         m_player.createBody(m_world.getPhysicsWorld());
     
         m_loaded = true;
@@ -96,11 +95,12 @@ public class GamePanel extends JPanel implements KeyListener {
             case MENU:
                 
                 break;
-            case GAME:    
-                float timeStep = 1.0f / FPS;
+            case GAME: 
+                m_player.update();
+                
                 int velocityIterations = 6;
                 int positionIterations = 2;
-                m_world.getPhysicsWorld().step(timeStep, velocityIterations, positionIterations);
+                m_world.getPhysicsWorld().step(this.updateInterval/1000.0f, velocityIterations, positionIterations);
                 break;
             default:
                 System.out.println("Invalid state");
@@ -144,15 +144,15 @@ public class GamePanel extends JPanel implements KeyListener {
         int code = key.getKeyCode();
         
         if(code == KeyEvent.VK_W) {
-                m_player.setThrust();
+            m_player.setThrust(true);
         }
      
         if(code == KeyEvent.VK_E) {
-                m_player.setRotation(true);
+            m_player.setRotation(RotationAction.Right);
         }
         
         if(code == KeyEvent.VK_Q) {
-                m_player.setRotation(false);
+            m_player.setRotation(RotationAction.Left);
         }
 
 
@@ -163,5 +163,17 @@ public class GamePanel extends JPanel implements KeyListener {
     @Override
     public void keyReleased(KeyEvent key) {
         int code = key.getKeyCode();
+        
+        if(code == KeyEvent.VK_W) {
+            m_player.setThrust(false);
+        }
+     
+        if(code == KeyEvent.VK_E) {
+            m_player.setRotation(RotationAction.None);
+        }
+        
+        if(code == KeyEvent.VK_Q) {
+            m_player.setRotation(RotationAction.None);
+        }
     }
 }

@@ -16,7 +16,7 @@ import org.jbox2d.dynamics.BodyType;
 
 public class ActiveGameObject extends GameObject {
 
-    ActiveGameObject(Vec2 pos, double weight){
+    ActiveGameObject(Vec2 pos){
         super(pos, BodyType.DYNAMIC);
     }
 }

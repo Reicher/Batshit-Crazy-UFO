@@ -18,29 +18,53 @@ public class Player extends ActiveGameObject {
     private boolean m_thrust;
     private float m_thrustPower;
     private float m_rotPower;
+    
+    private RotationAction m_rotAction;
 
-    public Player(Vec2 pos, double weight) {
-        super(pos, weight);
+    public enum RotationAction{
+        Left, None, Right
+    }
+    
+    public Player(Vec2 pos) {
+        super(pos);
         
         Vec2[] points = new Vec2[]{ new Vec2(-1.0f, -1.5f), new Vec2(-1.0f, 1.5f)
                 , new Vec2(1.0f, 1.5f), new Vec2(1.0f, -1.5f) };
         setPoints(points);
         
         m_thrust = false;
-        m_thrustPower = -120.0f; 
-        m_rotPower =  -30.0f;
+        m_rotAction = RotationAction.None;
+        m_thrustPower = 200.0f; 
+        m_rotPower =  20f;
     }
     
-    public void setThrust(){
-        Vec2 ThrustVec = new Vec2(-m_thrustPower * (float)Math.sin(m_body.getAngle()), 
-                                   m_thrustPower * (float)Math.cos(m_body.getAngle()));
-        m_body.applyForce(ThrustVec, m_body.getWorldCenter());
+    public void setThrust(boolean mode){
+        m_thrust = mode;
     }   
     
-    public void setRotation(boolean Right){
-        if( Right )
-            m_body.applyTorque(-m_rotPower);
+    public void setRotation(RotationAction mode){
+        m_rotAction = mode;
+    }
+    
+       
+    public void update() {
+        if( m_thrust ){
+            Vec2 ThrustVec = new Vec2(m_thrustPower * (float)Math.sin(m_body.getAngle()), 
+                           -m_thrustPower * (float)Math.cos(m_body.getAngle()));
+            m_body.applyForceToCenter(ThrustVec);
+        }
         else
-            m_body.applyTorque(m_rotPower);
+            m_body.applyForceToCenter(new Vec2(0, 0));
+            
+        switch( m_rotAction ){
+            case Left:
+                m_body.applyTorque(-m_rotPower);
+               break;
+            case Right:
+                m_body.applyTorque(m_rotPower);
+            case None:
+            default:
+                m_body.applyTorque(0); // Needed?
+        }
     }
 }
