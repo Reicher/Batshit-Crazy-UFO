@@ -21,37 +21,52 @@ public class CaveSegment {
     private Vec2 m_upperEnd;
     private Vec2 m_lowerEnd;
     
-    private final float m_minLength = 3;
-    private final float m_maxLength = 6;
+    private final float m_minLength = 1;
+    private final float m_maxLength = 10;
     private final float m_maxDiviation = (float)Math.PI/2;
-    private float m_minWide = 6;
-    private float m_maxWide = 18;
+    private final float m_minWide = 7;
+    private final float m_maxWide = 18;
+    private final float m_formations = 0.9f;
+    private final float m_maxFormation = 4;
     
     private GameObject m_upperHalf;
     private GameObject m_lowerHalf;
+    private GameObject m_stalagmite;
+    private GameObject m_stalactite;
 
 
-    CaveSegment(WorldDefinition world, Vec2 upperEdge, Vec2 lowerEdge) {
+    CaveSegment(WorldDefinition world, Vec2 upperEdge, Vec2 lowerEdge, boolean first) {
         m_upperHalf = new GameObject(new Vec2(0, 0), BodyType.STATIC);
         m_lowerHalf = new GameObject(new Vec2(0, 0), BodyType.STATIC);
         
         ArrayList<Vec2> upperPoints = new ArrayList<Vec2>();
         ArrayList<Vec2> lowerPoints = new ArrayList<Vec2>();
         
-        upperPoints.add(upperEdge);
-        lowerPoints.add(lowerEdge);
+        // First Object have special point
+        if(first){
+            upperPoints.add(new Vec2(upperEdge.x
+                                ,(upperEdge.y - lowerEdge.y)/2)); 
+            lowerPoints.add(new Vec2(lowerEdge.x
+                                , (upperEdge.y - lowerEdge.y)/2)); 
+        }else{
+            upperPoints.add(upperEdge);
+            lowerPoints.add(lowerEdge); 
+        }
+        
         
         Vec2 lastUpper = upperEdge;
         Vec2 lastLower = lowerEdge;
+
         
         //Not so nice looking
         Vec2 newUpper, newLower;
         do{
             float r = (float)Math.random() * (m_maxLength - m_minLength) + m_minLength;
             float a = (float)Math.random() * m_maxDiviation - m_maxDiviation/2;
+            
             newUpper = new Vec2( lastUpper.x + (r * (float)Math.cos(a))
                                     , lastUpper.y + (r * (float)Math.sin(a)));
-            r = (float)Math.random() * (m_maxLength - m_minLength) + m_minLength;
+            
             a = (float)Math.random() * m_maxDiviation - m_maxDiviation/2;
             newLower = new Vec2( lastLower.x + (r * (float)Math.cos(a))
                                     , lastLower.y + (r * (float)Math.sin(a)));
@@ -77,11 +92,39 @@ public class CaveSegment {
         m_lowerHalf.setPoints(lower);
         m_upperHalf.createBody(world.getPhysicsWorld());
         m_lowerHalf.createBody(world.getPhysicsWorld());
+        
+        // Rockformations
+        if(Math.random() < m_formations){
+            m_stalactite = new GameObject(new Vec2(0, 0), BodyType.STATIC);            
+            Vec2[] lowPoints = { new Vec2(lower[0].x + (lower[1].x - lower[0].x)*0.4f
+                                        , lower[0].y + (lower[1].y - lower[0].y)*0.4f)
+                              , new Vec2( lower[0].x + (lower[1].x - lower[0].x)*0.6f
+                                       ,  lower[0].y + (lower[1].y - lower[0].y)*0.6f)
+                              , new Vec2( lower[0].x + (lower[1].x - lower[0].x)/2,
+                                          lower[0].y - 3)};
+            m_stalactite.setPoints(lowPoints);
+            m_stalactite.createBody(world.getPhysicsWorld());
+            
+            m_stalagmite = new GameObject(new Vec2(0, 0), BodyType.STATIC);            
+            Vec2[] highPoints = { new Vec2( upper[0].x + (upper[1].x - upper[0].x)*0.4f
+                                          , upper[0].y + (upper[1].y - upper[0].y)*0.4f)
+                                , new Vec2( upper[0].x + (upper[1].x - upper[0].x)*0.6f
+                                         ,  upper[0].y + (upper[1].y - upper[0].y)*0.6f)
+                                , new Vec2( upper[0].x + (upper[1].x - upper[0].x)/2
+                                          , upper[0].y + 3)};
+            m_stalagmite.setPoints(highPoints);
+            m_stalagmite.createBody(world.getPhysicsWorld());
+        }    
     }
 
     void draw(Graphics2D g, WorldDefinition worldDef) {
         m_upperHalf.draw(g, worldDef);
         m_lowerHalf.draw(g, worldDef);
+        
+        if(m_stalagmite != null)
+            m_stalagmite.draw(g, worldDef);
+        if(m_stalactite != null)
+            m_stalactite.draw(g, worldDef);
     }
 
     Vec2 getLowerEnd() {

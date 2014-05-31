@@ -54,7 +54,7 @@ public class GameObject {
         m_fixture.shape = m_shape;
         m_fixture.density = 0.6f;
         m_fixture.friction = 0.3f;        
-        m_fixture.restitution = 0.5f;
+        m_fixture.restitution = 0.2f;
         
         m_body =  world.createBody(m_bodyDef);
         m_body.createFixture(m_fixture);
@@ -75,7 +75,7 @@ public class GameObject {
         }
         
         goShape.closePath();
-        g.draw(goShape);  
+        g.fill(goShape);  
     }   
     
     public Vec2 getPosition(){

@@ -24,16 +24,20 @@ import org.jbox2d.dynamics.World;
 public class Terrain {
     Terrain(WorldDefinition world){
         m_caveSegment = new ArrayList<CaveSegment>();
-        
+
         // Initial Cave Segments
-        Vec2 upperEdge = new Vec2(0, -3);
-        Vec2 lowerEdge = new Vec2(0, 3);
-        for(int i = 0; i < 40; i++){
-            CaveSegment Next = new CaveSegment(world, upperEdge, lowerEdge);
-            m_caveSegment.add(Next);
-            upperEdge = Next.getUpperEnd();
-            lowerEdge = Next.getLowerEnd();
-        }
+        Vec2 upperEdge = new Vec2(0, -6);
+        Vec2 lowerEdge = new Vec2(0, 6);
+        m_caveSegment.add(new CaveSegment(world, upperEdge, lowerEdge, true));
+        for(int i = 0; i < 40; i++)
+            m_caveSegment.add(getNextSegment(world));
+
+        
+    }
+    
+    private CaveSegment getNextSegment(WorldDefinition world){
+        CaveSegment Last = m_caveSegment.get(m_caveSegment.size() - 1);
+        return new CaveSegment(world, Last.getUpperEnd(), Last.getLowerEnd(), false);
     }
     
     public void draw(Graphics2D g, WorldDefinition world){

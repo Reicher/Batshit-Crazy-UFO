@@ -5,6 +5,7 @@
 package caveufo;
 
 import caveufo.Player.RotationAction;
+import caveufo.Player.SideAction;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -75,7 +76,7 @@ public class GamePanel extends JPanel implements KeyListener {
         
         m_terrain = new Terrain(m_world);
 
-        Vec2 pos = new Vec2(-4, 0); 
+        Vec2 pos = new Vec2(7, -3); 
         m_player = new Player(pos);
         m_player.createBody(m_world.getPhysicsWorld());
     
@@ -150,9 +151,17 @@ public class GamePanel extends JPanel implements KeyListener {
         if(code == KeyEvent.VK_E) {
             m_player.setRotation(RotationAction.Right);
         }
-        
         if(code == KeyEvent.VK_Q) {
             m_player.setRotation(RotationAction.Left);
+        }
+        
+        // LEFT RIGHT
+        if(code == KeyEvent.VK_D) {
+            m_player.SetSide(SideAction.Right);
+        }
+        
+        if(code == KeyEvent.VK_A) {
+            m_player.SetSide(SideAction.Left);
         }
 
 
@@ -168,12 +177,12 @@ public class GamePanel extends JPanel implements KeyListener {
             m_player.setThrust(false);
         }
      
-        if(code == KeyEvent.VK_E) {
+        if(code == KeyEvent.VK_E || code == KeyEvent.VK_Q) {
             m_player.setRotation(RotationAction.None);
         }
         
-        if(code == KeyEvent.VK_Q) {
-            m_player.setRotation(RotationAction.None);
+        if(code == KeyEvent.VK_A || code == KeyEvent.VK_D) {
+            m_player.SetSide(SideAction.None);
         }
     }
 }

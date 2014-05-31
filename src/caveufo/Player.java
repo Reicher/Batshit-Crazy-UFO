@@ -18,10 +18,16 @@ public class Player extends ActiveGameObject {
     private boolean m_thrust;
     private float m_thrustPower;
     private float m_rotPower;
+    private float m_sidePower;
     
     private RotationAction m_rotAction;
+    private SideAction m_sideAction;
 
     public enum RotationAction{
+        Left, None, Right
+    }
+    
+    public enum SideAction{
         Left, None, Right
     }
     
@@ -34,8 +40,10 @@ public class Player extends ActiveGameObject {
         
         m_thrust = false;
         m_rotAction = RotationAction.None;
+        m_sideAction = SideAction.None;
         m_thrustPower = 200.0f; 
         m_rotPower =  20f;
+        m_sidePower = 30f;
     }
     
     public void setThrust(boolean mode){
@@ -46,10 +54,14 @@ public class Player extends ActiveGameObject {
         m_rotAction = mode;
     }
     
+    public void SetSide(SideAction mode){
+        m_sideAction = mode;
+    }
        
     public void update() {
+        Vec2 ThrustVec;
         if( m_thrust ){
-            Vec2 ThrustVec = new Vec2(m_thrustPower * (float)Math.sin(m_body.getAngle()), 
+            ThrustVec = new Vec2(m_thrustPower * (float)Math.sin(m_body.getAngle()), 
                            -m_thrustPower * (float)Math.cos(m_body.getAngle()));
             m_body.applyForceToCenter(ThrustVec);
         }
@@ -62,6 +74,20 @@ public class Player extends ActiveGameObject {
                break;
             case Right:
                 m_body.applyTorque(m_rotPower);
+            case None:
+            default:
+                m_body.applyTorque(0); // Needed?
+        }
+        
+        switch( m_sideAction ){
+            case Left:
+            case Right:
+            ThrustVec = new Vec2(m_sidePower * (float)Math.sin(m_body.getAngle()- Math.PI/2), 
+                                 m_sidePower * (float)Math.cos(m_body.getAngle()- Math.PI/2));
+            if(m_sideAction == SideAction.Left)
+                m_body.applyForceToCenter(ThrustVec);
+            else
+                m_body.applyForceToCenter(ThrustVec.negate());                
             case None:
             default:
                 m_body.applyTorque(0); // Needed?
