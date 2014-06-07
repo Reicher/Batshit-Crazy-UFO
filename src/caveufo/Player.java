@@ -7,12 +7,13 @@
 package caveufo;
 
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.BodyType;
 
 /**
  *
  * @author regen
  */
-public class Player extends ActiveGameObject {
+public class Player extends SolidObject {
         
     // Engines
     private boolean m_thrust;
@@ -31,19 +32,20 @@ public class Player extends ActiveGameObject {
         Left, None, Right
     }
     
-    public Player(Vec2 pos) {
-        super(pos);
+    public Player() {
+        super(null);
         
-        Vec2[] points = new Vec2[]{ new Vec2(-1.0f, -1.5f), new Vec2(-1.0f, 1.5f)
-                , new Vec2(1.0f, 1.5f), new Vec2(1.0f, -1.5f) };
-        setPoints(points);
+        setPoints( new Vec2[]{ new Vec2(-1.0f, -1.5f), new Vec2(-1.0f, 1.5f)
+                , new Vec2(1.0f, 1.5f), new Vec2(1.0f, -1.5f) });
         
         m_thrust = false;
         m_rotAction = RotationAction.None;
         m_sideAction = SideAction.None;
         m_thrustPower = 200.0f; 
-        m_rotPower =  20f;
+        m_rotPower =  40f;
         m_sidePower = 30f;
+        
+        this.setBodyType(BodyType.DYNAMIC);
     }
     
     public void setThrust(boolean mode){

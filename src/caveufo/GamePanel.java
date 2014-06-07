@@ -38,8 +38,7 @@ public class GamePanel extends JPanel implements KeyListener {
     private State m_gameState;
     
     private Player m_player;
-    private Terrain m_terrain; // should be a list or something later
-    
+    private LevelHandler m_terrain;     
     private WorldDefinition m_world;
     
     private enum State{
@@ -74,10 +73,9 @@ public class GamePanel extends JPanel implements KeyListener {
         
         m_world = new WorldDefinition(m_screenSize);
         
-        m_terrain = new Terrain(m_world);
+        m_terrain = new LevelHandler(m_world);
 
-        Vec2 pos = new Vec2(7, -3); 
-        m_player = new Player(pos);
+        m_player = new Player();
         m_player.createBody(m_world.getPhysicsWorld());
     
         m_loaded = true;

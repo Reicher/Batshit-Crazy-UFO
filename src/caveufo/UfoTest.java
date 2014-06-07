@@ -35,7 +35,7 @@ public class UfoTest extends TestbedTest {
         getWorld().setGravity(new Vec2(0, -9.82f));
         
         // Rocket
-        m_player = new Player(new Vec2(0, 0));
+        m_player = new Player();
         m_player.createBody(getWorld());
         
         // Ground

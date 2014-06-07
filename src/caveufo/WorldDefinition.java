@@ -16,6 +16,7 @@ import org.jbox2d.dynamics.World;
  */
 public class WorldDefinition {
     WorldDefinition(Dimension screenResolution){
+        //m_physicWorld = new World(new Vec2(0,9.82f));
         m_physicWorld = new World(new Vec2(0,0));
         m_screenRes = screenResolution;
         m_physicalSize = new Vec2(screenResolution.width/20, screenResolution.height/20);
