@@ -76,6 +76,7 @@ public class GamePanel extends JPanel implements KeyListener {
         m_terrain = new LevelHandler(m_world);
 
         m_player = new Player();
+        m_world.getPhysicsWorld().setContactListener(m_player);
         m_player.createBody(m_world.getPhysicsWorld());
     
         m_loaded = true;

@@ -31,7 +31,7 @@ public class LevelHandler {
         
         // Initial Cave Segments
         m_all.add(CaveFactory.getFirst());
-        for(int i = 0; i < 40; i++)
+        for(int i = 0; i < 100; i++)
             m_all.add(CaveFactory.getNext(m_all.get(m_all.size() - 1)));
     }
     

@@ -6,14 +6,18 @@
 
 package caveufo;
 
+import org.jbox2d.callbacks.ContactImpulse;
+import org.jbox2d.callbacks.ContactListener;
+import org.jbox2d.collision.Manifold;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.contacts.Contact;
 
 /**
  *
  * @author regen
  */
-public class Player extends SolidObject {
+public class Player extends SolidObject implements ContactListener {
         
     // Engines
     private boolean m_thrust;
@@ -58,6 +62,28 @@ public class Player extends SolidObject {
     
     public void SetSide(SideAction mode){
         m_sideAction = mode;
+    }
+    
+     @Override
+    public void beginContact(Contact contact) {
+    }    
+    
+    @Override
+    public void endContact(Contact contact) {
+        
+    }
+
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+        
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+        for( float f : impulse.normalImpulses)
+            System.out.println(f);
+        
+        System.out.println("\n");
     }
        
     public void update() {

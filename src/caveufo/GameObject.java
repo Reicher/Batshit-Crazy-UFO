@@ -8,6 +8,7 @@ package caveufo;
 
 import java.awt.Graphics2D;
 import java.awt.geom.GeneralPath;
+import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.shapes.EdgeShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.collision.shapes.Shape;

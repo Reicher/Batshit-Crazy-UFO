@@ -33,5 +33,4 @@ public class LineObject extends GameObject{
     public Vec2 getRight(){
         return ((EdgeShape)m_shape).m_vertex2;
     }
-    
 }
