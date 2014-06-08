@@ -17,6 +17,7 @@ import org.jbox2d.dynamics.World;
 public abstract class CaveFactory {
     
     private final static float m_segmentLength = 5;
+    private final static float m_maxAngle = (float)Math.PI/2;
     private final static float m_maxDiviation = (float)Math.PI/4;
     private final static float m_minWide = 5;
     private final static float m_maxWide = 7;
@@ -42,9 +43,10 @@ public abstract class CaveFactory {
         cieling.createBody(m_world.getPhysicsWorld());
         floor.createBody(m_world.getPhysicsWorld());
         
-        return new CaveSegment(cieling, floor);
+        return new CaveSegment(cieling, floor, 0);
     }
     
+    // Can be a lot cleaner, better, faster, stronger
     public static CaveSegment getNext(CaveSegment segment){
         LineObject cieling, floor;  
         
@@ -57,7 +59,10 @@ public abstract class CaveFactory {
         middle.x /= 2;
         middle.y /= 2;
         
-        float a = (float)Math.random() * m_maxDiviation - m_maxDiviation/2;
+        float a = Float.MAX_VALUE;
+        while(Math.abs(a) > m_maxAngle) 
+            a = segment.getDirection() + (float)Math.random() * m_maxDiviation - m_maxDiviation/2;
+            
         Vec2 dir = new Vec2( m_segmentLength * (float)Math.cos(a), 
                              m_segmentLength * (float)Math.sin(a));
         
@@ -75,6 +80,6 @@ public abstract class CaveFactory {
         floor = new LineObject(lowerPoint);
         cieling.createBody(m_world.getPhysicsWorld());
         floor.createBody(m_world.getPhysicsWorld());
-        return new CaveSegment(cieling, floor);
+        return new CaveSegment(cieling, floor, a);
     }
 }

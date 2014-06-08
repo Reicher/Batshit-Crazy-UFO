@@ -19,8 +19,11 @@ import org.jbox2d.common.Vec2;
 public class CaveSegment {
     private LineObject m_upperLine;
     private LineObject m_lowerLine;
+    
+    private float m_direction;
 
-    CaveSegment(LineObject upper, LineObject lower ) {
+    // Direction should be possible to calculte from upper and lower though...
+    CaveSegment(LineObject upper, LineObject lower, float direction) {
         m_upperLine = upper;
         m_lowerLine = lower;
     }
@@ -52,7 +55,11 @@ public class CaveSegment {
 
         g.setColor(Color.BLACK);
     }
-
+    
+    float getDirection(){
+        return m_direction;
+    }
+    
     Vec2 getUpperEnd() {
         return m_upperLine.getRight();
     }
@@ -60,5 +67,4 @@ public class CaveSegment {
     Vec2 getLowerEnd() {
         return m_lowerLine.getRight();
     }
-    
 }

@@ -22,22 +22,34 @@ import org.jbox2d.dynamics.World;
  * @author regen
  */
 public class LevelHandler {
-    private ArrayList<CaveSegment> m_all;
-    private ArrayList<CaveSegment> m_current;
+    private ArrayList<CaveSegment> m_caveSegments;
+    private CaveSegment m_lastSegment;
+    private WorldDefinition m_world;
 
     LevelHandler(WorldDefinition world){
+        m_world = world;
         CaveFactory.setWorld(world);
-        m_all = new ArrayList<CaveSegment>();
+        m_caveSegments = new ArrayList<CaveSegment>();
         
-        // Initial Cave Segments
-        m_all.add(CaveFactory.getFirst());
-        for(int i = 0; i < 100; i++)
-            m_all.add(CaveFactory.getNext(m_all.get(m_all.size() - 1)));
+        // Initial Cave Segment
+        m_lastSegment = CaveFactory.getFirst();
+        m_caveSegments.add(m_lastSegment);
+    }
+    
+    private void addSegment(){
+        m_lastSegment = CaveFactory.getNext(m_lastSegment);
+        m_caveSegments.add(m_lastSegment);
     }
     
     public void draw(Graphics2D g, WorldDefinition world){
-        for( CaveSegment cs : m_all)
+        for( CaveSegment cs : m_caveSegments)
             cs.draw(g, world);
         
+    }
+    
+    // Grows the map infront of the player
+    public void update(Vec2 position){        
+        while(position.x + m_world.getPhysicalSize().x > m_lastSegment.getLowerEnd().x)
+            addSegment();                    
     }
 }

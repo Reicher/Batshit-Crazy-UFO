@@ -38,7 +38,7 @@ public class GamePanel extends JPanel implements KeyListener {
     private State m_gameState;
     
     private Player m_player;
-    private LevelHandler m_terrain;     
+    private LevelHandler m_levelHandler;     
     private WorldDefinition m_world;
     
     private enum State{
@@ -73,7 +73,7 @@ public class GamePanel extends JPanel implements KeyListener {
         
         m_world = new WorldDefinition(m_screenSize);
         
-        m_terrain = new LevelHandler(m_world);
+        m_levelHandler = new LevelHandler(m_world);
 
         m_player = new Player();
         m_world.getPhysicsWorld().setContactListener(m_player);
@@ -97,6 +97,7 @@ public class GamePanel extends JPanel implements KeyListener {
                 break;
             case GAME: 
                 m_player.update();
+                m_levelHandler.update(m_player.getPosition());
                 
                 int velocityIterations = 6;
                 int positionIterations = 2;
@@ -121,7 +122,7 @@ public class GamePanel extends JPanel implements KeyListener {
         g2.translate(-playerPos.x, -playerPos.y);
         
         m_player.draw(g2, m_world);
-        m_terrain.draw(g2, m_world);
+        m_levelHandler.draw(g2, m_world);
 
         
         g2.translate(0, 0);

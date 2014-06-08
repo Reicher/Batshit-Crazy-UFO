@@ -82,8 +82,6 @@ public class Player extends SolidObject implements ContactListener {
     public void postSolve(Contact contact, ContactImpulse impulse) {
         for( float f : impulse.normalImpulses)
             System.out.println(f);
-        
-        System.out.println("\n");
     }
        
     public void update() {

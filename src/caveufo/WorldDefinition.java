@@ -35,6 +35,10 @@ public class WorldDefinition {
                 , m_screenRes.width / m_physicalSize.y);
     }
     
+    public Vec2 getPhysicalSize(){
+        return m_physicalSize;
+    }
+    
     private World m_physicWorld;
     private Dimension m_screenRes;
     private Vec2 m_physicalSize;
