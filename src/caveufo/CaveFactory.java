@@ -21,7 +21,10 @@ public abstract class CaveFactory {
     private final static float m_maxDiviation = (float)Math.PI/4;
     private final static float m_minWide = 5;
     private final static float m_maxWide = 7;
+    private final static int m_checkPointDistance = 30;
+    
     private static WorldDefinition m_world;    
+    private static int nextId = 0;
     
     public static void setWorld(WorldDefinition world){
         m_world = world;
@@ -43,7 +46,7 @@ public abstract class CaveFactory {
         cieling.createBody(m_world.getPhysicsWorld());
         floor.createBody(m_world.getPhysicsWorld());
         
-        return new CaveSegment(cieling, floor, 0);
+        return new CaveSegment(nextId++, cieling, floor, 0);
     }
     
     // Can be a lot cleaner, better, faster, stronger
@@ -61,7 +64,7 @@ public abstract class CaveFactory {
         
         float a = Float.MAX_VALUE;
         while(Math.abs(a) > m_maxAngle) 
-            a = segment.getDirection() + (float)Math.random() * m_maxDiviation - m_maxDiviation/2;
+            a = segment.getDirection() + ((float)Math.random() * m_maxDiviation) - m_maxDiviation/2;
             
         Vec2 dir = new Vec2( m_segmentLength * (float)Math.cos(a), 
                              m_segmentLength * (float)Math.sin(a));
@@ -80,6 +83,13 @@ public abstract class CaveFactory {
         floor = new LineObject(lowerPoint);
         cieling.createBody(m_world.getPhysicsWorld());
         floor.createBody(m_world.getPhysicsWorld());
-        return new CaveSegment(cieling, floor, a);
+        
+        CaveSegment tmp = new CaveSegment(nextId++, cieling, floor, a);
+        
+        // Special features
+        if(tmp.m_id % m_checkPointDistance == 0)
+            tmp.setCheckpoint();
+        
+        return tmp;
     }
 }

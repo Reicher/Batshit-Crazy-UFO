@@ -48,8 +48,11 @@ public class LevelHandler {
     }
     
     // Grows the map infront of the player
-    public void update(Vec2 position){        
+    public void update(Vec2 position){   
+        
         while(position.x + m_world.getPhysicalSize().x > m_lastSegment.getLowerEnd().x)
-            addSegment();                    
+            addSegment();    
+        
+        // bla bla checkpoint logic bla bla
     }
 }

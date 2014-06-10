@@ -20,12 +20,20 @@ public class CaveSegment {
     private LineObject m_upperLine;
     private LineObject m_lowerLine;
     
+    // SHould be in some checkpoint class?
+    private boolean m_isCheckpoint;
+    private boolean m_isCheckpointUsed;
+    
     private float m_direction;
+    
+    public final int m_id;
 
     // Direction should be possible to calculte from upper and lower though...
-    CaveSegment(LineObject upper, LineObject lower, float direction) {
+    CaveSegment(int id, LineObject upper, LineObject lower, float direction) {
         m_upperLine = upper;
         m_lowerLine = lower;
+        m_id = id;
+        m_isCheckpoint = false;
     }
 
     void draw(Graphics2D g, WorldDefinition worldDef) {        
@@ -33,6 +41,16 @@ public class CaveSegment {
         
         m_upperLine.draw(g, worldDef);
         m_lowerLine.draw(g, worldDef);
+        
+        if(m_isCheckpoint){
+            g.setColor(Color.GREEN);
+            Vec2 pPM = worldDef.getPixelsPerMeter();
+            g.drawLine( (int)(getUpperEnd().x * pPM.x), 
+                        (int)(getUpperEnd().y * pPM.y), 
+                        (int)(getLowerEnd().x * pPM.x), 
+                        (int)(getLowerEnd().y * pPM.y));
+            g.setColor(Color.BLACK);           
+        }
 
         //DEBUG
         if(false){
@@ -56,15 +74,28 @@ public class CaveSegment {
         g.setColor(Color.BLACK);
     }
     
-    float getDirection(){
+    public void setCheckpoint(){
+        m_isCheckpoint = true;
+        m_isCheckpointUsed = false;
+    }
+    
+    public boolean isCheckpoint(){
+        return m_isCheckpoint;
+    }
+    
+    public boolean isCheckPointUsed(){
+        return m_isCheckpointUsed;
+    }
+    
+    public float getDirection(){
         return m_direction;
     }
     
-    Vec2 getUpperEnd() {
+    public Vec2 getUpperEnd() {
         return m_upperLine.getRight();
     }
     
-    Vec2 getLowerEnd() {
+    public Vec2 getLowerEnd() {
         return m_lowerLine.getRight();
     }
 }
