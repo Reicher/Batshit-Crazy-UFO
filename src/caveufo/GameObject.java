@@ -105,4 +105,8 @@ abstract class GameObject {
     public Vec2 getPosition(){
         return m_body.getWorldCenter();
     }
+    
+    protected void setPosition(Vec2 pos){
+        m_body.setTransform(pos, 0f);
+    }
 }

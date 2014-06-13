@@ -32,6 +32,8 @@ public class GamePanel extends JPanel implements KeyListener {
     private final int FPS = 60;
     private int updateInterval;
     private Timer gameTimer;
+    private TimeKeeper m_timeKeeper;
+    
     private boolean m_loaded = false;
 
     private ActionListener m_listener;
@@ -67,15 +69,18 @@ public class GamePanel extends JPanel implements KeyListener {
             }
         };
         
+        m_world = new WorldDefinition(m_screenSize);
+        
         gameTimer = new Timer(updateInterval, m_listener);
+        m_timeKeeper = new TimeKeeper();
+        
         addKeyListener(this);
         m_gameState = State.GAME;
-        
-        m_world = new WorldDefinition(m_screenSize);
         
         m_levelHandler = new LevelHandler(m_world);
 
         m_player = new Player();
+        addKeyListener(m_player);
         m_world.getPhysicsWorld().setContactListener(m_player);
         m_player.createBody(m_world.getPhysicsWorld());
     
@@ -98,6 +103,17 @@ public class GamePanel extends JPanel implements KeyListener {
             case GAME: 
                 m_player.update();
                 m_levelHandler.update(m_player.getPosition());
+                
+                if(m_player.tookCheckpoint())
+                    m_timeKeeper.resetTimer();
+                
+                if(m_timeKeeper.getTimeLeft() <= 0){
+                    System.out.println("Game over man! New Game Starting!");
+                    m_levelHandler.GenerateNewLevel();
+                    m_player.reset();
+                    m_timeKeeper.resetTimer();
+                    
+                }
                 
                 int velocityIterations = 6;
                 int positionIterations = 2;
@@ -137,52 +153,16 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent arg0) {
-    }
+    public void keyTyped(KeyEvent key) {}
 
     @Override
     public void keyPressed(KeyEvent key) {            
         int code = key.getKeyCode();
-        
-        if(code == KeyEvent.VK_W) {
-            m_player.setThrust(true);
-        }
-     
-        if(code == KeyEvent.VK_E) {
-            m_player.setRotation(RotationAction.Right);
-        }
-        if(code == KeyEvent.VK_Q) {
-            m_player.setRotation(RotationAction.Left);
-        }
-        
-        // LEFT RIGHT
-        if(code == KeyEvent.VK_D) {
-            m_player.SetSide(SideAction.Right);
-        }
-        
-        if(code == KeyEvent.VK_A) {
-            m_player.SetSide(SideAction.Left);
-        }
-
 
         if(code == KeyEvent.VK_ESCAPE)
             m_gameState = State.EXIT;
     }
  
     @Override
-    public void keyReleased(KeyEvent key) {
-        int code = key.getKeyCode();
-        
-        if(code == KeyEvent.VK_W) {
-            m_player.setThrust(false);
-        }
-     
-        if(code == KeyEvent.VK_E || code == KeyEvent.VK_Q) {
-            m_player.setRotation(RotationAction.None);
-        }
-        
-        if(code == KeyEvent.VK_A || code == KeyEvent.VK_D) {
-            m_player.SetSide(SideAction.None);
-        }
-    }
+    public void keyReleased(KeyEvent key) {}
 }

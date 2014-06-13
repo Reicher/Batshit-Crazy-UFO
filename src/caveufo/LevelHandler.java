@@ -30,7 +30,13 @@ public class LevelHandler {
         m_world = world;
         CaveFactory.setWorld(world);
         m_caveSegments = new ArrayList<CaveSegment>();
-        
+
+        GenerateNewLevel();
+    }
+    
+    public void GenerateNewLevel(){
+        m_caveSegments.clear();
+                
         // Initial Cave Segment
         m_lastSegment = CaveFactory.getFirst();
         m_caveSegments.add(m_lastSegment);

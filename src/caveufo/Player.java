@@ -6,6 +6,8 @@
 
 package caveufo;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.Manifold;
@@ -17,7 +19,7 @@ import org.jbox2d.dynamics.contacts.Contact;
  *
  * @author regen
  */
-public class Player extends SolidObject implements ContactListener {
+public class Player extends SolidObject implements ContactListener, KeyListener  {
         
     // Engines
     private boolean m_thrust;
@@ -27,6 +29,8 @@ public class Player extends SolidObject implements ContactListener {
     
     private RotationAction m_rotAction;
     private SideAction m_sideAction;
+    
+    private boolean m_freshCheckpointTaken;
 
     public enum RotationAction{
         Left, None, Right
@@ -48,6 +52,7 @@ public class Player extends SolidObject implements ContactListener {
         m_thrustPower = 200.0f; 
         m_rotPower =  40f;
         m_sidePower = 30f;
+        m_freshCheckpointTaken = false;
         
         this.setBodyType(BodyType.DYNAMIC);
     }
@@ -63,33 +68,19 @@ public class Player extends SolidObject implements ContactListener {
     public void SetSide(SideAction mode){
         m_sideAction = mode;
     }
-    
-     @Override
-    public void beginContact(Contact contact) {
-        // Get checkpoints
-        if(contact.getFixtureA().getBody().getUserData().getClass().equals(Checkpoint.class)){
-            Checkpoint.class.cast(contact.getFixtureA().getBody().getUserData()).Take();
-        }
+
+    public boolean tookCheckpoint(){
+        if( !m_freshCheckpointTaken )
+            return false;
+        
+        m_freshCheckpointTaken = false;
+        return true;
     }    
     
-    @Override
-    public void endContact(Contact contact) {  
-        
-
+    public void reset(){
+        setPosition(new Vec2(0, 0));
     }
-
-    @Override
-    public void preSolve(Contact contact, Manifold oldManifold) {
-
-    }
-
-    @Override
-    public void postSolve(Contact contact, ContactImpulse impulse) {
-        //for( float f : impulse.normalImpulses)
-        //    System.out.println(f);
-        
-    }
-       
+    
     public void update() {
         Vec2 ThrustVec;
         if( m_thrust ){
@@ -125,4 +116,72 @@ public class Player extends SolidObject implements ContactListener {
                 m_body.applyTorque(0); // Needed?
         }
     }
+        
+     @Override
+    public void beginContact(Contact contact) {    
+        if(contact.getFixtureA().getBody().getUserData().getClass().equals(Checkpoint.class)){
+            m_freshCheckpointTaken = Checkpoint.class.cast(contact.getFixtureA().getBody().getUserData()).Take();
+        }
+    }    
+    
+    @Override
+    public void endContact(Contact contact) {  
+    }
+
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+        // check damage
+    }
+
+    @Override
+    public void keyTyped(KeyEvent ke) {}
+
+    @Override
+    public void keyPressed(KeyEvent key) {
+        int code = key.getKeyCode();
+        
+        if(code == KeyEvent.VK_W) {
+            setThrust(true);
+        }
+     
+        if(code == KeyEvent.VK_E) {
+            setRotation(RotationAction.Right);
+        }
+        if(code == KeyEvent.VK_Q) {
+            setRotation(RotationAction.Left);
+        }
+        
+        // LEFT RIGHT
+        if(code == KeyEvent.VK_D) {
+            SetSide(SideAction.Right);
+        }
+        
+        if(code == KeyEvent.VK_A) {
+            SetSide(SideAction.Left);
+        }
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent key) {
+        int code = key.getKeyCode();
+        
+        if(code == KeyEvent.VK_W) {
+            setThrust(false);
+        }
+     
+        if(code == KeyEvent.VK_E || code == KeyEvent.VK_Q) {
+            setRotation(RotationAction.None);
+        }
+        
+        if(code == KeyEvent.VK_A || code == KeyEvent.VK_D) {
+            SetSide(SideAction.None);
+        }
+    }
+
 }
