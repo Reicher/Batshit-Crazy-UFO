@@ -43,17 +43,18 @@ public class Player extends SolidObject implements ContactListener, KeyListener 
     public Player() {
         super(null);
         
-        setPoints( new Vec2[]{ new Vec2(-1.0f, -1.5f), new Vec2(-1.0f, 1.5f)
-                , new Vec2(1.0f, 1.5f), new Vec2(1.0f, -1.5f) });
+        setPoints( new Vec2[]{ new Vec2(-0.75f, -1.5f), new Vec2(-1.0f, 1.5f)
+                , new Vec2(1.0f, 1.5f), new Vec2(0.75f, -1.5f) });
         
         m_thrust = false;
         m_rotAction = RotationAction.None;
         m_sideAction = SideAction.None;
-        m_thrustPower = 200.0f; 
+        m_thrustPower = 100.0f; 
         m_rotPower =  40f;
         m_sidePower = 30f;
         m_freshCheckpointTaken = false;
         
+        this.setWeight(1f);
         this.setBodyType(BodyType.DYNAMIC);
     }
     
@@ -77,8 +78,11 @@ public class Player extends SolidObject implements ContactListener, KeyListener 
         return true;
     }    
     
-    public void reset(){
-        setPosition(new Vec2(0, 0));
+    protected void reset(){
+        m_body.setTransform(new Vec2(0, 0), 0f);
+
+        m_body.setAngularVelocity(0);
+        m_body.setLinearVelocity(new Vec2(0, 0));
     }
     
     public void update() {

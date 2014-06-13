@@ -18,16 +18,25 @@ public abstract class CaveFactory {
     
     private final static float m_segmentLength = 5;
     private final static float m_maxAngle = (float)Math.PI/2;
-    private final static float m_maxDiviation = (float)Math.PI/4;
+    private final static float m_maxDiviation = (float)Math.PI/6;
     private final static float m_minWide = 5;
     private final static float m_maxWide = 7;
-    private final static int m_checkPointDistance = 5;
+    private final static int m_checkPointDistance = 20;
     
     private static WorldDefinition m_world;    
     private static int nextId = 0;
     
+    // experimental
+    private final static int m_expSegLength = 10;
+    private final static float m_expMaxAngle = (float)Math.PI/3;
+    private static float m_expAngle = 0;
+    private static int m_expCount = 0; 
+    
     public static void setWorld(WorldDefinition world){
         m_world = world;
+        
+        if(m_maxDiviation + m_expMaxAngle > m_maxAngle)
+            System.out.println("Cave factory parameters fucked up");
     }
     
     public static CaveSegment getFirst(){
@@ -62,9 +71,14 @@ public abstract class CaveFactory {
         middle.x /= 2;
         middle.y /= 2;
         
-        float a = Float.MAX_VALUE;
-        while(Math.abs(a) > m_maxAngle) 
-            a = segment.getDirection() + ((float)Math.random() * m_maxDiviation) - m_maxDiviation/2;
+        // Experimental
+        if(m_expCount == 0){
+            m_expAngle = ((float)Math.random() * m_expMaxAngle) - m_expMaxAngle/2;
+            m_expCount = m_expSegLength;
+        }else
+            m_expCount--;
+        
+        float a = m_expAngle + (((float)Math.random() * m_maxDiviation) - m_maxDiviation/2);
             
         Vec2 dir = new Vec2( m_segmentLength * (float)Math.cos(a), 
                              m_segmentLength * (float)Math.sin(a));

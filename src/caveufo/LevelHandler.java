@@ -35,6 +35,9 @@ public class LevelHandler {
     }
     
     public void GenerateNewLevel(){
+        for(CaveSegment segment : m_caveSegments)
+            segment.remove(m_world.getPhysicsWorld());
+            
         m_caveSegments.clear();
                 
         // Initial Cave Segment

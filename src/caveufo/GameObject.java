@@ -59,9 +59,9 @@ abstract class GameObject {
  
         // FIXTURE
         m_fixture.shape = m_shape;
-        m_fixture.density = 0.6f;
+        m_fixture.density = 0.5f;
         m_fixture.friction = 0.3f;        
-        m_fixture.restitution = 0.2f;
+        m_fixture.restitution = 0.05f;
         
         m_body =  world.createBody(m_bodyDef);
         m_body.createFixture(m_fixture);
@@ -106,7 +106,12 @@ abstract class GameObject {
         return m_body.getWorldCenter();
     }
     
-    protected void setPosition(Vec2 pos){
-        m_body.setTransform(pos, 0f);
+    protected void setWeight(float w){
+        m_fixture.density = w;
+    }
+    
+    //höhö
+    public void destoyMyBody(World world){
+        world.destroyBody(m_body);
     }
 }

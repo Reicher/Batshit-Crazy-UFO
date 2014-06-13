@@ -18,15 +18,14 @@ import org.jbox2d.dynamics.World;
  * @author regen
  */
 public class CaveSegment {
+    public final int m_id;
+    
     private LineObject m_upperLine;
     private LineObject m_lowerLine;
     
-    // SHould be in some checkpoint class?
+    // Possible additions
     private Checkpoint m_checkpoint;
     
-    private float m_direction;
-    
-    public final int m_id;
 
     // Direction should be possible to calculte from upper and lower though...
     CaveSegment(int id, LineObject upper, LineObject lower, float direction) {
@@ -75,11 +74,6 @@ public class CaveSegment {
     public boolean isCheckpoint(){
         return m_checkpoint != null;
     }
-
-    
-    public float getDirection(){
-        return m_direction;
-    }
     
     public Vec2 getUpperEnd() {
         return m_upperLine.getRight();
@@ -87,5 +81,13 @@ public class CaveSegment {
     
     public Vec2 getLowerEnd() {
         return m_lowerLine.getRight();
+    }
+
+    void remove(World physicsWorld) {
+        m_upperLine.destoyMyBody(physicsWorld);
+        m_lowerLine.destoyMyBody(physicsWorld);
+        
+        if(m_checkpoint != null)
+            m_checkpoint.destoyMyBody(physicsWorld);
     }
 }
