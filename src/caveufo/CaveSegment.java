@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.World;
 
 /**
  *
@@ -21,8 +22,7 @@ public class CaveSegment {
     private LineObject m_lowerLine;
     
     // SHould be in some checkpoint class?
-    private boolean m_isCheckpoint;
-    private boolean m_isCheckpointUsed;
+    private Checkpoint m_checkpoint;
     
     private float m_direction;
     
@@ -33,7 +33,8 @@ public class CaveSegment {
         m_upperLine = upper;
         m_lowerLine = lower;
         m_id = id;
-        m_isCheckpoint = false;
+        
+        m_checkpoint = null;
     }
 
     void draw(Graphics2D g, WorldDefinition worldDef) {        
@@ -42,15 +43,8 @@ public class CaveSegment {
         m_upperLine.draw(g, worldDef);
         m_lowerLine.draw(g, worldDef);
         
-        if(m_isCheckpoint){
-            g.setColor(Color.GREEN);
-            Vec2 pPM = worldDef.getPixelsPerMeter();
-            g.drawLine( (int)(getUpperEnd().x * pPM.x), 
-                        (int)(getUpperEnd().y * pPM.y), 
-                        (int)(getLowerEnd().x * pPM.x), 
-                        (int)(getLowerEnd().y * pPM.y));
-            g.setColor(Color.BLACK);           
-        }
+        if(m_checkpoint != null)
+            m_checkpoint.draw(g, worldDef);
 
         //DEBUG
         if(false){
@@ -74,18 +68,14 @@ public class CaveSegment {
         g.setColor(Color.BLACK);
     }
     
-    public void setCheckpoint(){
-        m_isCheckpoint = true;
-        m_isCheckpointUsed = false;
+    public void setCheckpoint(Checkpoint checkpoint){
+        m_checkpoint = checkpoint;
     }
     
     public boolean isCheckpoint(){
-        return m_isCheckpoint;
+        return m_checkpoint != null;
     }
-    
-    public boolean isCheckPointUsed(){
-        return m_isCheckpointUsed;
-    }
+
     
     public float getDirection(){
         return m_direction;

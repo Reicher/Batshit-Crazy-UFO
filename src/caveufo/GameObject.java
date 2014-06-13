@@ -29,7 +29,7 @@ abstract class GameObject {
     
     private BodyDef m_bodyDef;
     protected Shape m_shape;
-    private FixtureDef m_fixture;
+    protected FixtureDef m_fixture;
     private Vec2 m_points[];
     
     protected GameObject(Vec2 points[]){
@@ -39,6 +39,8 @@ abstract class GameObject {
         m_bodyDef.position.set( 0, 0);  
         m_bodyDef.type = BodyType.STATIC;
         m_points = points;
+        
+        m_fixture = new FixtureDef();
     }
     
     protected void setPoints(Vec2 points[]){
@@ -56,15 +58,15 @@ abstract class GameObject {
         createShape(m_points);
  
         // FIXTURE
-        m_fixture = new FixtureDef();
         m_fixture.shape = m_shape;
         m_fixture.density = 0.6f;
         m_fixture.friction = 0.3f;        
         m_fixture.restitution = 0.2f;
         
-        
         m_body =  world.createBody(m_bodyDef);
         m_body.createFixture(m_fixture);
+        
+        m_body.setUserData(this);
     }
     
     public void draw(Graphics2D g, WorldDefinition worldDef){

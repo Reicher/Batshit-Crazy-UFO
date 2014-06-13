@@ -66,22 +66,28 @@ public class Player extends SolidObject implements ContactListener {
     
      @Override
     public void beginContact(Contact contact) {
+        // Get checkpoints
+        if(contact.getFixtureA().getBody().getUserData().getClass().equals(Checkpoint.class)){
+            Checkpoint.class.cast(contact.getFixtureA().getBody().getUserData()).Take();
+        }
     }    
     
     @Override
-    public void endContact(Contact contact) {
+    public void endContact(Contact contact) {  
         
+
     }
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
-        
+
     }
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
-        for( float f : impulse.normalImpulses)
-            System.out.println(f);
+        //for( float f : impulse.normalImpulses)
+        //    System.out.println(f);
+        
     }
        
     public void update() {

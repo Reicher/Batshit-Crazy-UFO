@@ -21,7 +21,7 @@ public abstract class CaveFactory {
     private final static float m_maxDiviation = (float)Math.PI/4;
     private final static float m_minWide = 5;
     private final static float m_maxWide = 7;
-    private final static int m_checkPointDistance = 30;
+    private final static int m_checkPointDistance = 5;
     
     private static WorldDefinition m_world;    
     private static int nextId = 0;
@@ -87,8 +87,12 @@ public abstract class CaveFactory {
         CaveSegment tmp = new CaveSegment(nextId++, cieling, floor, a);
         
         // Special features
-        if(tmp.m_id % m_checkPointDistance == 0)
-            tmp.setCheckpoint();
+        if(tmp.m_id % m_checkPointDistance == 0){
+            Checkpoint checkpoint = new Checkpoint(
+                    new Vec2[]{upperPoint[1], lowerPoint[1]});
+            checkpoint.createBody(m_world.getPhysicsWorld());
+            tmp.setCheckpoint(checkpoint);
+        }
         
         return tmp;
     }
