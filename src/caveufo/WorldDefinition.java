@@ -7,6 +7,8 @@
 package caveufo;
 
 import java.awt.Dimension;
+import java.awt.Insets;
+import javax.swing.border.Border;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
@@ -15,11 +17,17 @@ import org.jbox2d.dynamics.World;
  * @author regen
  */
 public class WorldDefinition {
+        
+    private World m_physicWorld;
+    private Dimension m_screenRes;
+    private Vec2 m_physicalSize;
+    
     WorldDefinition(Dimension screenResolution){
         m_physicWorld = new World(new Vec2(0,9.82f));
         //m_physicWorld = new World(new Vec2(0,0));
         m_screenRes = screenResolution;
         m_physicalSize = new Vec2(screenResolution.width/20, screenResolution.height/20);
+        
     }
     
     public void SetWorld(World world){
@@ -37,9 +45,6 @@ public class WorldDefinition {
     
     public Vec2 getPhysicalSize(){
         return m_physicalSize;
-    }
-    
-    private World m_physicWorld;
-    private Dimension m_screenRes;
-    private Vec2 m_physicalSize;
+    }    
+
 }

@@ -30,7 +30,13 @@ public class Player extends SolidObject implements ContactListener, KeyListener 
     private RotationAction m_rotAction;
     private SideAction m_sideAction;
     
-    private boolean m_freshCheckpointTaken;
+    private boolean m_freshCheckpointTaken; // so fucking stupid
+    
+    private final float m_damageThreshold = 20.0f;
+    private float m_maxHealth = 100;
+    private float m_health = m_maxHealth;
+    
+    private float m_score = 0;
 
     public enum RotationAction{
         Left, None, Right
@@ -70,16 +76,29 @@ public class Player extends SolidObject implements ContactListener, KeyListener 
         m_sideAction = mode;
     }
 
+    // Must take away before someone see
     public boolean tookCheckpoint(){
         if( !m_freshCheckpointTaken )
             return false;
         
         m_freshCheckpointTaken = false;
+        m_score += 100;
         return true;
     }    
     
+    public float getHealth(){
+        return m_health;
+    }
+    
+    public float getScore(){
+        return m_score;
+    }
+    
     protected void reset(){
-        m_body.setTransform(new Vec2(0, 0), 0f);
+        m_health = m_maxHealth;
+        m_score = 0;
+        
+        m_body.setTransform(new Vec2(0, 0), 0f);        
 
         m_body.setAngularVelocity(0);
         m_body.setLinearVelocity(new Vec2(0, 0));
@@ -140,6 +159,13 @@ public class Player extends SolidObject implements ContactListener, KeyListener 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
         // check damage
+        for(float force : impulse.normalImpulses){
+            if(force > m_damageThreshold)
+                m_health -= force - m_damageThreshold;
+        }
+        
+        if(m_health < 0)
+            m_health = 0f;
     }
 
     @Override

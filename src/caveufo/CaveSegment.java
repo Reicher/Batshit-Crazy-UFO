@@ -42,7 +42,7 @@ public class CaveSegment {
         m_upperLine.draw(g, worldDef);
         m_lowerLine.draw(g, worldDef);
         
-        if(m_checkpoint != null)
+        if(m_checkpoint != null && !m_checkpoint.isUsed())
             m_checkpoint.draw(g, worldDef);
 
         //DEBUG

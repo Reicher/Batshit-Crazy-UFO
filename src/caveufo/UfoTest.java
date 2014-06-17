@@ -8,6 +8,7 @@ package caveufo;
 
 import caveufo.Player.RotationAction;
 import java.awt.Dimension;
+import java.awt.Insets;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;

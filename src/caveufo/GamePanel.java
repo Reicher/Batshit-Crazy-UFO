@@ -28,6 +28,7 @@ import org.jbox2d.common.Vec2;
 public class GamePanel extends JPanel implements KeyListener {
     //private final Dimension m_screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private final Dimension m_screenSize = new Dimension(800, 600);
+    private GUIHandler m_gui;
 
     private final int FPS = 60;
     private int updateInterval;
@@ -71,6 +72,8 @@ public class GamePanel extends JPanel implements KeyListener {
         
         m_world = new WorldDefinition(m_screenSize);
         
+        m_gui = new GUIHandler();
+        
         gameTimer = new Timer(updateInterval, m_listener);
         m_timeKeeper = new TimeKeeper();
         
@@ -107,13 +110,16 @@ public class GamePanel extends JPanel implements KeyListener {
                 if(m_player.tookCheckpoint())
                     m_timeKeeper.resetTimer();
                 
-                if(m_timeKeeper.getTimeLeft() <= 0){
+                if( isGameOver() ){
                     System.out.println("Game over man! New Game Starting!");
                     m_levelHandler.GenerateNewLevel();
                     m_player.reset();
                     m_timeKeeper.resetTimer();
-                    
                 }
+                
+                m_gui.setTimeLeft(m_timeKeeper.getTimeLeft());
+                m_gui.setHealth(m_player.getHealth());
+                m_gui.setScore(m_player.getScore());
                 
                 int velocityIterations = 6;
                 int positionIterations = 2;
@@ -122,7 +128,11 @@ public class GamePanel extends JPanel implements KeyListener {
             default:
                 System.out.println("Invalid state");
         }
-
+    }
+    
+    private boolean isGameOver(){
+        return (m_timeKeeper.getTimeLeft() <= 0f) 
+                || (m_player.getHealth() <= 0f);
     }
     
     @Override
@@ -135,13 +145,18 @@ public class GamePanel extends JPanel implements KeyListener {
         m_player.getPosition().x * m_world.getPixelsPerMeter().x - m_screenSize.width/2
         ,m_player.getPosition().y * m_world.getPixelsPerMeter().y - m_screenSize.height/2);
 
+        // For the camera to follow
         g2.translate(-playerPos.x, -playerPos.y);
         
         m_player.draw(g2, m_world);
         m_levelHandler.draw(g2, m_world);
-
         
-        g2.translate(0, 0);
+        g2.translate(playerPos.x, playerPos.y);
+        
+        // Draw GUI
+        m_gui.draw(g2, m_world);
+        
+        
     }
     
 

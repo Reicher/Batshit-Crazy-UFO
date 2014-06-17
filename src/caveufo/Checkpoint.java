@@ -35,17 +35,20 @@ public class Checkpoint extends LineObject{
     }
     
     public void draw(Graphics2D g, WorldDefinition worldDef){
-            g.setColor(Color.GREEN);
-            super.draw(g, worldDef);
-            g.setColor(Color.BLACK);      
+        g.setColor(Color.GREEN);
+        super.draw(g, worldDef);
+        g.setColor(Color.BLACK);      
     }
 
     public boolean Take(){
         if(!m_used){
             m_used = true;
-            System.out.println("CHECKPOINT: " + m_id);
             return true;
         }
         return false;
+    }
+    
+    public boolean isUsed(){
+        return m_used;
     }
 }
