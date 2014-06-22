@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package caveufo;
+package batshitUfo;
 
 import org.jbox2d.collision.shapes.EdgeShape;
 import org.jbox2d.collision.shapes.PolygonShape;

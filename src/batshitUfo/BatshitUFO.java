@@ -4,8 +4,15 @@
  * and open the template in the editor.
  */
 
-package caveufo;
+package batshitUfo;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.DisplayMode;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import javax.swing.JFrame;
 import org.jbox2d.testbed.framework.TestList;
 import org.jbox2d.testbed.framework.TestbedController;
@@ -21,11 +28,9 @@ import org.jbox2d.testbed.framework.j2d.TestPanelJ2D;
  *
  * @author regen
  */
-public class CaveUFO {
-
-    /**
-     * @param args the command line arguments
-     */
+public class BatshitUFO {
+    private static JFrame f = new JFrame("Batshit UFO");
+    
     public static void runTests(){
         TestbedModel model = new TestbedModel();         // create our model
 
@@ -46,19 +51,32 @@ public class CaveUFO {
         testbed.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
-    public static void main(String[] args) {
-        JFrame window = new JFrame("Cave UFO");
+    public static void Display(boolean fullscreen){
+        GraphicsEnvironment env =
+            GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice dev = env.getDefaultScreenDevice();
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setBackground(Color.DARK_GRAY);
         
-        if( false ){
-            runTests();
+        if(fullscreen){
+            f.setUndecorated(true);
+            f.setAlwaysOnTop(true);
+            f.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         }
-        else{
-            window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            window.setContentPane(new GamePanel());
-            window.pack();
-            //window.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            window.setVisible(true);
-        }
+        else
+            f.setSize(800, 600);
+
+        f.add(new GamePanel(f.getSize()));
+        f.pack();
+        
+        if(fullscreen)
+            dev.setFullScreenWindow(f);
+        else
+            f.setVisible(true);
+    }
+    
+    public static void main(String[] args) {
+        Display(false);
     }
     
 }

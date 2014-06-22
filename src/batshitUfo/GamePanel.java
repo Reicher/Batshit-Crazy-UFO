@@ -2,13 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package caveufo;
+package batshitUfo;
 
-import caveufo.Player.RotationAction;
-import caveufo.Player.SideAction;
+import batshitUfo.Player.RotationAction;
+import batshitUfo.Player.SideAction;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -26,8 +28,8 @@ import org.jbox2d.common.Vec2;
  */
 
 public class GamePanel extends JPanel implements KeyListener {
-    //private final Dimension m_screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private final Dimension m_screenSize = new Dimension(800, 600);
+    private final Dimension m_screenSize;
+
     private GUIHandler m_gui;
 
     private final int FPS = 60;
@@ -48,8 +50,11 @@ public class GamePanel extends JPanel implements KeyListener {
         EXIT, MENU, GAME
     }
 
-    public GamePanel() {
+    public GamePanel(Dimension screenRes) {
         super();
+        
+        m_screenSize = screenRes;
+        
         init();
     }
     

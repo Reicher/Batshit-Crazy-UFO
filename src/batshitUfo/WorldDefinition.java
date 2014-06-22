@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package caveufo;
+package batshitUfo;
 
 import java.awt.Dimension;
 import java.awt.Insets;

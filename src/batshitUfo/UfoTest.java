@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 
-package caveufo;
+package batshitUfo;
 
-import caveufo.Player.RotationAction;
+import batshitUfo.Player.RotationAction;
 import java.awt.Dimension;
 import java.awt.Insets;
 import org.jbox2d.collision.shapes.PolygonShape;

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package caveufo;
+package batshitUfo;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
