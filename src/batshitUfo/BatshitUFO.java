@@ -31,6 +31,7 @@ import org.jbox2d.testbed.framework.j2d.TestPanelJ2D;
 public class BatshitUFO {
     private static JFrame f = new JFrame("Batshit UFO");
     
+    // Something wrong with this, gravity is up side down.
     public static void runTests(){
         TestbedModel model = new TestbedModel();         // create our model
 
@@ -41,9 +42,8 @@ public class BatshitUFO {
         
         // add our custom setting "My Range Setting", with a default value of 10, between 0 and 20
         model.getSettings().addSetting(new TestbedSetting("My Range Setting", SettingType.ENGINE, 10, 0, 20));
-
         TestbedPanel panel = new TestPanelJ2D(model);    // create our testbed panel
-
+        
         JFrame testbed; // put both into our testbed frame
         testbed = new TestbedFrame(model, panel, UpdateBehavior.UPDATE_CALLED);
         // etc
@@ -76,6 +76,9 @@ public class BatshitUFO {
     }
     
     public static void main(String[] args) {
+        
+        //runTests();
+        
         Display(false);
     }
     

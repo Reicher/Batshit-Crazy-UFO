@@ -59,13 +59,12 @@ public class GamePanel extends JPanel implements KeyListener {
     }
     
     public void init(){   
-        this.updateInterval = 1000 / FPS;
-        
         setPreferredSize(m_screenSize);
         setFocusable(true);
         requestFocus();
         
         // Init Game loop
+        this.updateInterval = 1000 / FPS;        
         m_listener = new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent event)
@@ -75,22 +74,20 @@ public class GamePanel extends JPanel implements KeyListener {
             }
         };
         
-        m_world = new WorldDefinition(m_screenSize);
-        
-        m_gui = new GUIHandler();
-        
-        gameTimer = new Timer(updateInterval, m_listener);
-        m_timeKeeper = new TimeKeeper();
-        
         addKeyListener(this);
         m_gameState = State.GAME;
         
+        m_world = new WorldDefinition(m_screenSize);
+        m_gui = new GUIHandler();
+        gameTimer = new Timer(updateInterval, m_listener);  
         m_levelHandler = new LevelHandler(m_world);
+        m_timeKeeper = new TimeKeeper();
 
-        m_player = new Player();
+        m_player = new Player();        
         addKeyListener(m_player);
-        m_world.getPhysicsWorld().setContactListener(m_player);
         m_player.createBody(m_world.getPhysicsWorld());
+        
+        m_world.getPhysicsWorld().setContactListener(m_player);
     
         m_loaded = true;
         gameTimer.start();
@@ -116,7 +113,6 @@ public class GamePanel extends JPanel implements KeyListener {
                     m_timeKeeper.resetTimer();
                 
                 if( isGameOver() ){
-                    System.out.println("Game over man! New Game Starting!");
                     m_levelHandler.GenerateNewLevel();
                     m_player.reset();
                     m_timeKeeper.resetTimer();
@@ -160,11 +156,9 @@ public class GamePanel extends JPanel implements KeyListener {
         
         // Draw GUI
         m_gui.draw(g2, m_world);
-        
-        
+
     }
     
-
     private void draw(){
         if(!m_loaded)
             return;
@@ -173,16 +167,15 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent key) {}
-
-    @Override
     public void keyPressed(KeyEvent key) {            
         int code = key.getKeyCode();
 
         if(code == KeyEvent.VK_ESCAPE)
             m_gameState = State.EXIT;
     }
- 
+    
+    @Override
+    public void keyTyped(KeyEvent key) {}
     @Override
     public void keyReleased(KeyEvent key) {}
 }

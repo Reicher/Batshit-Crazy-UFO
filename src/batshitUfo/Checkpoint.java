@@ -14,6 +14,7 @@ import org.jbox2d.collision.Manifold;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
+import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
 
 /**
@@ -23,15 +24,13 @@ import org.jbox2d.dynamics.contacts.Contact;
 public class Checkpoint extends LineObject{
     
     private boolean m_used;
-    private static int ID = 1;
-    private int m_id;
+    public final int m_id;
     
-    public Checkpoint(Vec2[] points){
+    public Checkpoint(Vec2[] points, int id){
         super(points);
         m_used = false;
         m_fixture.isSensor = true;
-        m_id = ID;
-        ID++;
+        m_id = id;
     }
     
     public void draw(Graphics2D g, WorldDefinition worldDef){
@@ -50,5 +49,11 @@ public class Checkpoint extends LineObject{
     
     public boolean isUsed(){
         return m_used;
+    }
+    
+    @Override
+    public void createBody( World world ){
+        super.createBody(world);
+        m_body.setUserData(this);
     }
 }

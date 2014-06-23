@@ -98,16 +98,17 @@ public abstract class CaveFactory {
         cieling.createBody(m_world.getPhysicsWorld());
         floor.createBody(m_world.getPhysicsWorld());
         
-        CaveSegment tmp = new CaveSegment(nextId++, cieling, floor, a);
+        CaveSegment tmp = new CaveSegment(nextId, cieling, floor, a);
         
         // Special features
-        if(tmp.m_id % m_checkPointDistance == 0){
+        if(nextId % m_checkPointDistance == 0){
             Checkpoint checkpoint = new Checkpoint(
-                    new Vec2[]{upperPoint[1], lowerPoint[1]});
+                    new Vec2[]{upperPoint[1], lowerPoint[1]}, nextId);
             checkpoint.createBody(m_world.getPhysicsWorld());
             tmp.setCheckpoint(checkpoint);
         }
         
+        nextId++;
         return tmp;
     }
 }

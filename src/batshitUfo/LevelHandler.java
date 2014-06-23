@@ -13,15 +13,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import java.util.Vector;
+import org.jbox2d.callbacks.ContactImpulse;
+import org.jbox2d.callbacks.ContactListener;
+import org.jbox2d.collision.Manifold;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.contacts.Contact;
 
 /**
  *
  * @author regen
  */
-public class LevelHandler {
+public class LevelHandler{
     private ArrayList<CaveSegment> m_caveSegments;
     private CaveSegment m_lastSegment;
     private WorldDefinition m_world;
@@ -36,7 +40,7 @@ public class LevelHandler {
     
     public void GenerateNewLevel(){
         for(CaveSegment segment : m_caveSegments)
-            segment.remove(m_world.getPhysicsWorld());
+            segment.removeSegment(m_world.getPhysicsWorld());
             
         m_caveSegments.clear();
                 
@@ -53,15 +57,18 @@ public class LevelHandler {
     public void draw(Graphics2D g, WorldDefinition world){
         for( CaveSegment cs : m_caveSegments)
             cs.draw(g, world);
-        
     }
     
     // Grows the map infront of the player
     public void update(Vec2 position){   
-        
         while(position.x + m_world.getPhysicalSize().x > m_lastSegment.getLowerEnd().x)
-            addSegment();    
-        
-        // bla bla checkpoint logic bla bla
+            addSegment();   
+    }
+    
+    void checkpointTaken(int id){
+        System.out.println("SOME KIND OF CHECKPOINT TAKEN, " + id);
+        for( CaveSegment cs : m_caveSegments)
+            if(cs.isCheckpoint() && cs.getId() == id)
+                cs.removeCheckpoint(m_world.getPhysicsWorld());
     }
 }

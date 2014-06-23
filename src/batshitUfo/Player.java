@@ -13,6 +13,7 @@ import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.Manifold;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
 
 /**
@@ -62,6 +63,12 @@ public class Player extends SolidObject implements ContactListener, KeyListener 
         
         this.setWeight(1f);
         this.setBodyType(BodyType.DYNAMIC);
+    }
+    
+    @Override
+    public void createBody( World world ){
+        super.createBody(world);
+        m_body.setUserData(this);
     }
     
     public void setThrust(boolean mode){
@@ -140,12 +147,21 @@ public class Player extends SolidObject implements ContactListener, KeyListener 
         }
     }
         
-     @Override
-    public void beginContact(Contact contact) {    
-        if(contact.getFixtureA().getBody().getUserData().getClass().equals(Checkpoint.class)){
-            m_freshCheckpointTaken = Checkpoint.class.cast(contact.getFixtureA().getBody().getUserData()).Take();
+    @Override   
+    public void beginContact(Contact contact) { 
+        Object A = contact.getFixtureA().getBody().getUserData();
+        Object B = contact.getFixtureB().getBody().getUserData();
+        
+        // Do i really need to mirror it?
+        if(A.getClass().equals(Player.class)){
+            if(B.getClass().equals(Checkpoint.class))
+                m_freshCheckpointTaken = ((Checkpoint)B).Take();
+        }        
+        else if(B.getClass().equals(Player.class)){
+            if(A.getClass().equals(Checkpoint.class))
+                m_freshCheckpointTaken = ((Checkpoint)A).Take();
         }
-    }    
+    }   
     
     @Override
     public void endContact(Contact contact) {  

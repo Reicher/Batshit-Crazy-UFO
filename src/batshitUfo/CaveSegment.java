@@ -75,6 +75,10 @@ public class CaveSegment {
         return m_checkpoint != null;
     }
     
+    public int getId(){
+        return m_id;
+    }
+    
     public Vec2 getUpperEnd() {
         return m_upperLine.getRight();
     }
@@ -83,11 +87,16 @@ public class CaveSegment {
         return m_lowerLine.getRight();
     }
 
-    void remove(World physicsWorld) {
+    public void removeSegment(World physicsWorld) {
         m_upperLine.destoyMyBody(physicsWorld);
         m_lowerLine.destoyMyBody(physicsWorld);
         
+       removeCheckpoint(physicsWorld);
+    }
+    
+    public void removeCheckpoint(World physicsWorld){
         if(m_checkpoint != null)
             m_checkpoint.destoyMyBody(physicsWorld);
+        m_checkpoint = null;
     }
 }

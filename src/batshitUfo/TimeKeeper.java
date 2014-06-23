@@ -18,7 +18,7 @@ import org.jbox2d.dynamics.contacts.Contact;
  *
  * @author regen
  */
-public class TimeKeeper{
+public class TimeKeeper implements ContactListener{
     
     private int m_updateFrequency = 100; //ms
     private float m_checkpointTimeMax = 10f; //s
@@ -46,5 +46,28 @@ public class TimeKeeper{
     public float getTimeLeft(){
         return m_checkpointTimeLeft;
     }
+    
+    @Override   
+    public void beginContact(Contact contact) { 
+        Object A = contact.getFixtureA().getBody().getUserData();
+        Object B = contact.getFixtureB().getBody().getUserData();
+        
+        // Do i really need to mirror it?
+        if(A.getClass().equals(Player.class)){
+            if(B.getClass().equals(Checkpoint.class))
+                resetTimer();
+        }        
+        else if(B.getClass().equals(Player.class)){
+            if(A.getClass().equals(Checkpoint.class))
+                resetTimer();
+        }
+    }
+    
+    @Override
+    public void endContact(Contact cntct) {}
+    @Override
+    public void preSolve(Contact cntct, Manifold mnfld) {}
+    @Override
+    public void postSolve(Contact cntct, ContactImpulse ci) {}
 
 }
